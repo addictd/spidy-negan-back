@@ -4,17 +4,11 @@ import ArticleController from './controllers/articleController';
 const articleController = new ArticleController();
 
 const socketevents = (socket) => {
-    socket.on( aTS.SEARCH_TAG, (data) => {
-        console.log(aTS.SEARCH_TAG , data);
-        const {tag} = data;
-        articleController.query_tag(socket, {tag});
-    });
 
-
-    socket.on( aTS.GET_ARTICLES , (data) => {
-        console.log(aTS.GET_ARTICLES , data);
-        const {tag} = data;
-        articleController.open_by_tag(socket, {tag});
+    socket.on( aTS.FETCH_MORE_LINKS , (data) => {
+        console.log(aTS.FETCH_MORE_LINKS , data);
+        const {tag, fetched_ids, count} = data;
+        articleController.get_more_stories(socket, {tag, fetched_ids, count});
     });
 }
 
