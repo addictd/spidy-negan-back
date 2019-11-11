@@ -4,37 +4,13 @@ import * as errMsg from "../utils/errorMsg";
 import * as c_book from '../utils/crawl_book';
 
 const crawlerServices = {
-    query_tag: promisify(queryTag),
-    fetch_more_stories_list : promisify(fetchMoreStories),
+    fetch_more_stories_list : promisify(fetchStoriesList),
     crawl_article: promisify(crawlArticle)
 }
 
 
-async function queryTag({ tag }, cb) { // for search by tag
-    // try {
-    //     if (!tag) throw errMsg.INCOMPLETE_ARGUMENTS;
 
-    //     const browser = await puppeteer.launch({ headless: true });
-    //     const page = await browser.newPage();
-
-    //     await page.goto(c_book.tag_search_url_available + tag);
-    //     const tags = await page.$$eval('a[data-action-source="search"]',
-    //         elems => elems.map(item => ({
-    //             tag: item.textContent,
-    //             link: item.getAttribute('href')
-    //         }))
-    //     );
-    //     await browser.close();
-    //     return cb(null, tags);
-
-    // } catch (err) {
-    //     return cb(errMsg._ERR(err));
-    // }
-}
-
-
-
-async function fetchMoreStories({ tag, count }, cb) {
+async function fetchStoriesList({ tag, count }, cb) {
     try {
         if (!tag || !count ) throw errMsg.INCOMPLETE_ARGUMENTS;
 
@@ -43,6 +19,11 @@ async function fetchMoreStories({ tag, count }, cb) {
 
         const _url = c_book.story_list_url + tag;
         await page.goto(_url);
+
+        const _tags_selector = c_book.story_related_tag_selector;
+        await page.waitFor(_tags_selector);
+        const related_tags = await page.$$eval(_tags_selector, elems => elems.map(elem => elem.textContent.toLowerCase() ))
+
 
         const _selector = c_book.story_list_selector;
         await page.waitFor(_selector);
@@ -56,12 +37,13 @@ async function fetchMoreStories({ tag, count }, cb) {
         }
 
         await browser.close();
-        return cb(null, fetched_links);
+        return cb(null, {links : fetched_links, related_tags});
 
     } catch (err) {
         return cb(errMsg._ERR(err));
     }
 }
+
 
 async function crawlArticle({ url }, cb) {
     try {

@@ -1,14 +1,19 @@
 //medium 
 
+//tags
+
+
 //stories
 export const story_list_url = 'https://medium.com/search?q=';
 export const story_list_selector = '.js-postListHandle > div .postArticle .postArticle-content a';
-
+export const story_related_tag_selector = '.js-searchResults ul> ul>li>a';
 
 //crawl articles
 export const article_selector = 'head script[type="application/ld+json"]';
 export const article_body_selector = 'article section';
 
+
+//related functions
 export const scrollToLastElem = async ({page, lastelemid, selector}) => {
 
     await page.evaluate(({ lastelemid, selector }) => {
