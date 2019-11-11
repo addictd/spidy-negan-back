@@ -14,7 +14,7 @@ router.post('/signin', userController.login );
 router.get('/allusers', userController.getUsers ); //dummy
 
 
-router.get('/articles', articleController.get );
+// router.get('/articles', articleController.get );
 
 
 module.exports = router;

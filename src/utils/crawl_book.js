@@ -1,11 +1,8 @@
-const  crawlbook = [{
-    website : 'https://medium.com',
-    indexing : [
-        {
-            for : 'main-article-list',
-            node_list : '.js-mainfeed article .postMetaInline--author',
-            article_title : '.js-mainfeed article a h2'
-        }
-    ]
-}]
-export default crawlbook;
+export const tag_search_url = 'https://medium.com/search/tags?q=';
+
+export const open_url_by_tag = (tag) => {
+    const base_url = 'https://medium.com/tag/';
+    tag = tag.trim();
+    tag = tag.replace(/\s/g, '');
+    return base_url+tag;
+};
