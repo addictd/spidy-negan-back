@@ -60,6 +60,7 @@ async function crawlArticle({ url }, cb) {
         let article = {};
 
         try {
+            const startTime = (new Date()).getTime();
             const browser = await puppeteer.launch({ headless: true });
             const page = await browser.newPage();
             await page.goto(url);
@@ -82,8 +83,10 @@ async function crawlArticle({ url }, cb) {
 
             await browser.close();
 
+            const endTime = (new Date()).getTime();
+            article.fetch_time = endTime - startTime;
         } catch (err) {
-            article.title = "Unable to load page."
+            article.err = true;
         }
 
         
