@@ -3,11 +3,11 @@ import mysqlConnection from '../db';
 import * as errMsg from "../utils/errorMsg";
 
 const UserModelServices = {
-    get_user_by_id: promisify(_get_by_id),
+    // get_user_by_id: promisify(_get_by_id),
     get_user_by_email: promisify(_get_by_email),
     add_user: promisify(_add),
-    update_user: promisify(_update),
-    delete_user: promisify(_delete),
+    // update_user: promisify(_update),
+    // delete_user: promisify(_delete),
     get_all_users: promisify(_get_all_users)
 }
 
@@ -55,16 +55,16 @@ async function _get_by_email(email, cb) {
     }
 }
 
-async function _get_by_id(id, cb) {
+// async function _get_by_id(id, cb) {
 
-}
+// }
 
-async function _update() {
+// async function _update() {
 
-}
-async function _delete() {
+// }
+// async function _delete() {
 
-}
+// }
 
 async function _get_all_users(cb) {
     try {

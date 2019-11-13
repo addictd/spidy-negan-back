@@ -21,12 +21,12 @@ async function fetchStoriesList({ tag, count }, cb) {
         await page.goto(_url);
 
         const _tags_selector = c_book.story_related_tag_selector;
-        await page.waitFor(_tags_selector);
+        // await page.waitFor(_tags_selector);
         const related_tags = await page.$$eval(_tags_selector, elems => elems.map(elem => elem.textContent.toLowerCase() ))
 
 
         const _selector = c_book.story_list_selector;
-        await page.waitFor(_selector);
+        // await page.waitFor(_selector);
 
         let fetched_links = await c_book.generateLinks({ page, selector: _selector });
         
@@ -35,7 +35,10 @@ async function fetchStoriesList({ tag, count }, cb) {
             const fetch_more = await c_book.fetchmorelinks({page, fetched_links, selector : _selector});
             fetched_links =  await c_book.generateLinks({page, selector : _selector });
         }
-
+        fetched_links = fetched_links.map(item => {
+            item.tag = tag;
+            return item;
+        })
         await browser.close();
         return cb(null, {links : fetched_links, related_tags});
 
@@ -45,7 +48,7 @@ async function fetchStoriesList({ tag, count }, cb) {
 }
 
 
-async function crawlArticle({ url }, cb) {
+async function crawlArticle({ url, tag }, cb) {
     try {
         if (!url) throw errMsg.INCOMPLETE_ARGUMENTS;
         const options = { timeout: 3000 };
@@ -61,13 +64,13 @@ async function crawlArticle({ url }, cb) {
 
             const {article_selector, article_body_selector } = c_book; 
             try {
-                await page.waitFor( article_selector , options);
+                // await page.waitFor( article_selector , options);
                 const elem = await page.$eval( article_selector, elem => elem.textContent);
                 article = JSON.parse(elem);
             } catch (err) { }
 
             try {
-                await page.waitFor( article_body_selector , options);
+                // await page.waitFor( article_body_selector , options);
                 const blog = await page.$$eval( article_body_selector, elems => elems.map(elem => elem.textContent));
                 article.blog = blog.reduce((result, item, i) => (result + item), '');
             } catch (err) { };
@@ -77,6 +80,7 @@ async function crawlArticle({ url }, cb) {
             await browser.close();
 
             article.fetch_time = endTime - startTime;
+            article.crawl_tag = tag;
         } catch (err) {
             article.err = true;
             article.identifier ="";

@@ -18,6 +18,8 @@ class ArticleController {
     try {
 
       const result = await crawlerServices.fetch_more_stories_list({ tag, count });
+      // console.log('filtered links ', result );
+
       const {links, related_tags} = result;
       
       socket.emit(aTS.GET_RELATED_TAGS_SUCCESS, {related_tags});
@@ -25,8 +27,8 @@ class ArticleController {
       const filtered_links = links.filter(item => fetched_ids.indexOf(item.id) < 0);
       
       for (let i = 0; i < filtered_links.length; i++) {
-        const article = await crawlerServices.crawl_article({ url: filtered_links[i].link });
-        socket.emit(aTS.FETCH_MORE_LINKS_SUCCESS, { article });
+        const article = await crawlerServices.crawl_article({ url: filtered_links[i].link, tag });
+        socket.emit(aTS.FETCH_MORE_LINKS_SUCCESS, { article, tag });
 
       }
 
