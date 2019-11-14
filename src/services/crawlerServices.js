@@ -81,8 +81,9 @@ async function crawlArticle({ url, tag }, cb) {
 
             article.fetch_time = endTime - startTime;
             article.crawl_tag = tag;
+            article.crawl_status = 'success';
         } catch (err) {
-            article.err = true;
+            article.crawl_status = 'err';
             article.identifier ="";
         }
 

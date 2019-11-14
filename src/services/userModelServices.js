@@ -26,7 +26,7 @@ async function _add({ email, password, role, name }, cb) {
                 INSERT INTO users (email, password, name, role) 
                 VALUES ('${email}', '${password}', '${name}', '${role}' );
         `, (err, rows, fields) => {
-            if (err) throw err;
+            if (err) return cb(errMsg._ERR(err));
             return cb(null, rows);
         });
 
@@ -46,7 +46,7 @@ async function _get_by_email(email, cb) {
                 SELECT * from users 
                 WHERE email='${email}'
         `, (err, rows, fields) => {
-            if (err) throw err;
+            if (err) return cb(errMsg._ERR(err));
             // console.log('[rows]------', rows);
             return cb(null, rows);
         });
@@ -71,7 +71,7 @@ async function _get_all_users(cb) {
         mysqlConnection.query(`
                 SELECT * from users 
         `, (err, rows) => {
-            if (err) throw err;
+            if (err) return cb(errMsg._ERR(err));
             // console.log('[rows]------', rows);
             return cb(null, rows);
         });
