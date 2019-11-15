@@ -10,7 +10,10 @@ export const story_related_tag_selector = '.js-searchResults ul> ul>li>a';
 
 //crawl articles
 export const article_selector = 'head script[type="application/ld+json"]';
-export const article_body_selector = 'article section';
+export const article_body_selector = 'article';
+
+//response link
+export const response_link = (id) => `https://medium.com/p/${id}/responses/show`;
 
 
 //related functions

@@ -11,6 +11,13 @@ const socketevents = (socket) => {
         const token = data[config.TOKEN];
         articleController.get_more_stories(socket, {tag, fetched_ids, count, token});
     });
+
+    socket.on( aTS.GET_RESPONSES , (data) => {
+        console.log(aTS.GET_RESPONSES , data);
+        const {id} = data;
+        // const token = data[config.TOKEN];
+        articleController.getResponse(socket, { id });
+    });
 }
 
 export default socketevents;

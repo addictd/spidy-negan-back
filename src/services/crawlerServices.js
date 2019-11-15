@@ -5,7 +5,8 @@ import * as c_book from '../utils/crawl_book';
 
 const crawlerServices = {
     fetch_more_stories_list : promisify(fetchStoriesList),
-    crawl_article: promisify(crawlArticle)
+    crawl_article: promisify(crawlArticle),
+    fetch_response : promisify(fetchResponse)
 }
 
 
@@ -51,7 +52,7 @@ async function fetchStoriesList({ tag, count }, cb) {
 async function crawlArticle({ url, tag }, cb) {
     try {
         if (!url) throw errMsg.INCOMPLETE_ARGUMENTS;
-        const options = { timeout: 3000 };
+        const options = { timeout: 30000 };
         let article = {};
 
         try {
@@ -74,8 +75,38 @@ async function crawlArticle({ url, tag }, cb) {
                 const blog = await page.$$eval( article_body_selector, elems => elems.map(elem => elem.textContent));
                 article.blog = blog.reduce((result, item, i) => (result + item), '');
             } catch (err) { };
+            
+            try {
+                await page.waitFor( article_body_selector , options);
+                await page.waitFor( article_body_selector + ' img', options);
+                const blog_html = await page.$$eval( article_body_selector , elems => elems.map(elem => elem.innerHTML ));
+                article.blog_html = blog_html.reduce((result, item, i) => (result + item), '');
+
+            } catch (err) { };
 
 
+            // try {
+            //     await page.waitFor( 'article' , options);
+            //     await page.waitFor( 'article img' , options);
+            //     const blog_html = await page.$$eval( 'article ', elems => elems.map(elem => elem.innerHTML ));
+            //     article.blog_html = blog_html.reduce((result, item, i) => (result + item), '');
+            // } catch (err) { };
+
+            try{
+                const styles = await page.evaluate((article) => {
+                    let obj = [];
+                    const sty = document.styleSheets;
+                    for(let i=0 ; i< sty.length; i++){
+                        obj[i] = sty[i].ownerNode.innerText;
+                    }
+                    return obj;
+                }, article);
+
+                
+                article.blog_style = styles;
+            }catch(err){}
+
+            
             const endTime = (new Date()).getTime();
             await browser.close();
 
@@ -87,7 +118,6 @@ async function crawlArticle({ url, tag }, cb) {
             article.identifier ="";
         }
 
-
         return cb(null, article);
 
     } catch (err) {
@@ -95,6 +125,34 @@ async function crawlArticle({ url, tag }, cb) {
     }
 }
 
+
+
+async function fetchResponse({ id}, cb) {
+    try {
+        if (!id ) throw errMsg.INCOMPLETE_ARGUMENTS;
+
+        const options = { timeout: 30000 };
+        let blog_response = '';
+
+        const browser = await puppeteer.launch({ headless: true });
+        const page = await browser.newPage();
+
+        try {
+            const url = c_book.response_link(id);
+            console.log('url========', url);
+            page.goto(url);
+            await page.waitFor( '.js-responsesStreamOther .js-streamItem' , options); 
+            blog_response = await page.$eval( '.js-responsesStreamOther ', elem => elem.innerHTML );
+            
+        } catch (err) { };
+
+        await browser.close();
+        return cb(null, blog_response);
+
+    } catch (err) {
+        return cb(errMsg._ERR(err));
+    }
+}
 
 
 export default crawlerServices;
