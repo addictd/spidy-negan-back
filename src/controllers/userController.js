@@ -2,6 +2,7 @@ import CryptService from "../services/crypt-service";
 import JwtService from "../services/jwt-service";
 import UserModelServices from '../services/userModelServices';
 import * as errMsg from "../utils/errorMsg";
+import { validateEmail } from "../utils/validators";
 
 const cryptService = new CryptService();
 const jwtService = new JwtService();
@@ -10,10 +11,9 @@ const jwtService = new JwtService();
 class UserController {
 
   async getUsers(req, res, next) {
-    // const { email } = req.body;
     try{
       const response = await UserModelServices.get_all_users();
-      console.log('response', response);
+      // console.log('response', response);
       return res.json({ status: true, data: response, msg: "Successful." });
     }catch(err){
       return res.json({ status: false, data: {}, msg: err.toString() });
@@ -21,17 +21,19 @@ class UserController {
   }
 
   async addUser(req, res, next) {
-    console.log('hit');
+    // console.log('hit');
     const { email, password, name } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     const role = "student";
     if (!email  || !password  || !name  ){
       return res.json({ status: false, data: {}, msg: errMsg.INCOMPLETE_ARGUMENTS })
     }
+    
+    if(!validateEmail(email)){  return res.json({ status: false, data: {}, msg: "Invalid email." }) };
 
     try {
       const _password = await cryptService.cryptify(password);
-      console.log('password', password)
+      // console.log('password', password)
       const _user = {
         email,
         password: _password,
@@ -56,13 +58,15 @@ class UserController {
       res.json({status : false, data : {}, msg : errMsg.INCOMPLETE_ARGUMENTS});
     }
     
+    if(!validateEmail(email)){  return res.json({ status: false, data: {}, msg: "Invalid email." }) };
+
     try{
       let user = await UserModelServices.get_user_by_email(email);
       user = user[0];
-      console.log("password", password, user.password, user);
+      // console.log("password", password, user.password, user);
       const is_pass_valid = await cryptService.verify(password, user.password);
       
-      console.log("is valid pass: ", is_pass_valid);
+      console.log("is pass correct: ", is_pass_valid);
 
       if(!is_pass_valid){
         throw "Password is not valid";

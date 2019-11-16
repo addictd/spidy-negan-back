@@ -11,7 +11,7 @@ try {
         socketEvents(socket);
 
         socket.on('disconnect', async function () {
-            console.log('A user disconnected----------------------');
+            console.log('[A user disconnected][backend]');
         });
         return socket;
     });

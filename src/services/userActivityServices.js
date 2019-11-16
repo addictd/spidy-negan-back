@@ -40,8 +40,6 @@ async function setActivity({ email, tag }, cb) {
         `, (err, rows) => {
             if (err) return cb(errMsg._ERR(err));
 
-            console.log('[user_activity_insert]------', rows);
-
             return cb(null, rows);
         });
 

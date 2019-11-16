@@ -18,10 +18,10 @@ const identifyUser = async (req, res, next) => {
 }
 
 export const identifyUserFunc = async (token) => {
-    console.log('token: ', token);
+    // console.log('token: ', token);
     try{
         const user = await jwtService.verifyToken(token);
-        console.log('user::::', user);
+        // console.log('user::::', user);
         return user;
     }catch(err){
         return {};

@@ -12,10 +12,16 @@ const socketevents = (socket) => {
         articleController.get_more_stories(socket, {tag, fetched_ids, count, token});
     });
 
+
+    socket.on( aTS.CRAWL_STORY , (data) => {
+        console.log(aTS.CRAWL_STORY , data);
+        const {url} = data;
+        articleController.crawl_story(socket, { url });
+    });
+
     socket.on( aTS.GET_RESPONSES , (data) => {
         console.log(aTS.GET_RESPONSES , data);
         const {id} = data;
-        // const token = data[config.TOKEN];
         articleController.getResponse(socket, { id });
     });
 }
