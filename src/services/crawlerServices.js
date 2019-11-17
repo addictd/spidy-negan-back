@@ -6,7 +6,8 @@ import * as c_book from '../utils/crawl_book';
 const crawlerServices = {
     fetch_more_stories_list : promisify(fetchStoriesList),
     crawl_article: promisify(crawlArticle),
-    fetch_response : promisify(fetchResponse)
+    fetch_response : promisify(fetchResponse),
+    fetch_blog_html : promisify(fechBlogHtml)
 }
 
 
@@ -81,45 +82,74 @@ async function crawlArticle({ url }, cb) {
                 article.blog = blog.reduce((result, item, i) => (result + item), '');
             } catch (err) { article.blog = ''; };
             
-            try {
-                await page.waitFor( article_body_selector , options);
-                await page.waitFor( article_body_selector + ' img', options);
-                const blog_html = await page.$$eval( article_body_selector , elems => elems.map(elem => elem.innerHTML ));
-                article.blog_html = blog_html.reduce((result, item, i) => (result + item), '');
-
-            } catch (err) { article.blog_html = ""; };
-
-
-            try{
-                const styles = await page.evaluate(() => {
-                    let obj = [];
-                    const sty = document.styleSheets;
-                    for(let i=0 ; i< sty.length; i++){
-                        obj[i] = sty[i].ownerNode.innerText;
-                    }
-                    return obj;
-                });
-
-                article.blog_style = styles;
-            }catch(err){ article.blog_style = ''; }
-
             
             const endTime = (new Date()).getTime();
             
             await browser.close();
 
             article.fetch_time = endTime - startTime;
-            // article.crawl_tag = tag;
             article.crawl_status = 'success';
 
         } catch (err) {
             article.fetch_time = -1;
-            // article.crawl_tag = "";
             article.identifier ="";
             article.crawl_status = 'err';
         }
 
         return cb(null, article);
+
+    } catch (err) {
+        return cb(errMsg._ERR(err));
+    }
+}
+
+
+
+
+
+async function fechBlogHtml({ url }, cb) {
+
+    try {
+        if (!url ) throw errMsg.INCOMPLETE_ARGUMENTS;
+
+        const options = { timeout: 30000 };
+        let blog_html = '';
+        let blog_style = '';
+
+        const browser = await puppeteer.launch({ headless: true });
+        const page = await browser.newPage();
+        await page.goto(url,  {waitUntil: 'networkidle2'});
+
+        const { article_body_selector, article_selector } = c_book; 
+        try {
+            await page.waitFor( article_selector , options);
+            await page.waitFor( article_body_selector + ' img', options);
+
+            blog_html = await page.evaluate(({article_body_selector}) => {
+                return document.querySelector(article_body_selector).innerHTML;
+            }, {article_body_selector});
+
+        } catch (err) { console.log("in html error"); };
+
+
+        try{
+            const styles = await page.evaluate(() => {
+                let str = '';
+                const sty = document.styleSheets;
+                for(let i=0 ; i< sty.length; i++){
+                    str += sty[i].ownerNode.innerText;
+                }
+                return str;
+            });
+
+            blog_style = styles;
+        }catch(err){ console.log("in style error"); }
+
+        
+
+        await browser.close();
+        
+        return cb(null, {blog_html, blog_style} );
 
     } catch (err) {
         return cb(errMsg._ERR(err));

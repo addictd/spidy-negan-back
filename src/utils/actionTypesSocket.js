@@ -16,3 +16,8 @@ export const GET_RESPONSES_FAIL =  'GET_RESPONSES_FAIL';
 export const CRAWL_STORY =  'CRAWL_STORY';
 export const CRAWL_STORY_SUCCESS =  'CRAWL_STORY_SUCCESS';
 export const CRAWL_STORY_FAIL =  'CRAWL_STORY_FAIL';
+
+
+export const BLOG_HTML =  'BLOG_HTML';
+export const BLOG_HTML_SUCCESS =  'BLOG_HTML_SUCCESS';
+export const BLOG_HTML_FAIL =  'BLOG_HTML_FAIL';
