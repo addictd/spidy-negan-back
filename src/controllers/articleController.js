@@ -50,35 +50,30 @@ class ArticleController {
 
     try {
 
-      try{
-        const article = await articleServices.get({id});
-        if(!article.length) throw "Article not in db.";
-        return socket.emit(aTS.CRAWL_STORY_SUCCESS, { article : article[0], tag });
-      }catch(err){
+      try {
+        const article = await articleServices.get({ id });
+        if (!article.length) throw "Article not in db.";
+        return socket.emit(aTS.CRAWL_STORY_SUCCESS, { article: article[0], tag });
+      } catch (err) {
         console.log(err);
       }
 
-      console.log('step 2');
-      
-      const article = await crawlerServices.crawl_article({ url });
+      var article = await crawlerServices.crawl_article({ url });
 
       if (article.image[0]) { article.image = article.image[0]; };
 
       article.keywords = article.keywords
-          .filter(item => {
-            if (item.split(":")[0] === 'Tag') return true;
-            return false;
-          })
-          .map(tag => tag.split(':')[1]).join(',');
+        .filter(item => {
+          if (item.split(":")[0] === 'Tag') return true;
+          return false;
+        })
+        .map(tag => tag.split(':')[1]).join(',');
 
       article.author = article.author.name;
       article.publisher = article.publisher.name;
 
-      if (article.crawl_status === 'success') {  //save to db
-        await articleServices.add(article);
-      }
-
       socket.emit(aTS.CRAWL_STORY_SUCCESS, { article, tag });
+
 
     } catch (err) {
       return socket.emit(aTS.CRAWL_STORY_FAIL, {
@@ -87,6 +82,9 @@ class ArticleController {
       });
     }
 
+    if (article.crawl_status === 'success') {  //save to db
+      this.saveToDb(article);
+    }
   }
 
 
@@ -100,12 +98,12 @@ class ArticleController {
 
     try {
 
-      const {blog_html, blog_style} = await crawlerServices.fetch_blog_html({ url });
+      const { blog_html, blog_style } = await crawlerServices.fetch_blog_html({ url });
       if (!blog_html) {
         throw "Unable to fetch html.";
       }
 
-      return socket.emit(aTS.BLOG_HTML_SUCCESS, { blog_html , blog_style});
+      return socket.emit(aTS.BLOG_HTML_SUCCESS, { blog_html, blog_style });
 
     } catch (err) {
       return socket.emit(aTS.BLOG_HTML_FAIL, {
@@ -147,6 +145,18 @@ class ArticleController {
 
   }
 
+
+  async saveToDb(article) {
+    try {
+      if (!article) {
+        throw "Unable to save to db. Argument error."
+      }
+      await articleServices.add(article);
+
+    } catch (err) {
+      console.log('Failed to save story.');
+    }
+  }
 
 }
 export default ArticleController;
