@@ -58,6 +58,8 @@ class ArticleController {
         console.log(err);
       }
 
+      console.log('step 2');
+      
       const article = await crawlerServices.crawl_article({ url });
 
       if (article.image[0]) { article.image = article.image[0]; };

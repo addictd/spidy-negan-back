@@ -67,9 +67,10 @@ async function crawlArticle({ url }, cb) {
             const page = await browser.newPage();
 
             const startTime = (new Date()).getTime();
-            await page.goto(url,  {waitUntil: 'networkidle2'});
+            await page.goto(url );
 
             const {article_selector, article_body_selector } = c_book; 
+
             try {
                 await page.waitFor( article_selector , options);
                 const elem = await page.$eval( article_selector, elem => elem.textContent);
@@ -82,7 +83,6 @@ async function crawlArticle({ url }, cb) {
                 article.blog = blog.reduce((result, item, i) => (result + item), '');
             } catch (err) { article.blog = ''; };
             
-            
             const endTime = (new Date()).getTime();
             
             await browser.close();
@@ -94,6 +94,7 @@ async function crawlArticle({ url }, cb) {
             article.fetch_time = -1;
             article.identifier ="";
             article.crawl_status = 'err';
+            // console.log('err: ', err);
         }
 
         return cb(null, article);
