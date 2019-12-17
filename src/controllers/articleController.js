@@ -55,7 +55,7 @@ class ArticleController {
         if (!article.length) throw "Article not in db.";
         return socket.emit(aTS.CRAWL_STORY_SUCCESS, { article: article[0], tag });
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       }
 
       var article = await crawlerServices.crawl_article({ url });

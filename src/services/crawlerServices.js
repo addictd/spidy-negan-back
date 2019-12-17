@@ -20,7 +20,7 @@ async function fetchStoriesList({ tag, count }, cb) {
         const page = await browser.newPage();
 
         const _url = c_book.story_list_url + tag;
-        await page.goto(_url, {waitUntil: 'networkidle2'});
+        await page.goto(_url  );
 
         const _tags_selector = c_book.story_related_tag_selector;
         await page.waitFor(_tags_selector);
@@ -119,7 +119,7 @@ async function fechBlogHtml({ url }, cb) {
 
         const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
-        await page.goto(url,  {waitUntil: 'networkidle2'});
+        await page.goto(url);
 
         const { article_body_selector, article_selector } = c_book; 
         try {
@@ -174,7 +174,7 @@ async function fetchResponse({ id}, cb) {
             const url = c_book.response_link(id);
             const {response_selector_parent, response_selector_item } = c_book;
             
-            page.goto(url , {waitUntil: 'networkidle2'} );
+            page.goto(url  );
             await page.waitFor( response_selector_item , options); 
             blog_response = await page.$eval( response_selector_parent, elem => elem.innerHTML );
             
