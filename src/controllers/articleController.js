@@ -19,6 +19,7 @@ class ArticleController {
 
     try {
       const user = await identifyUserFunc(token);
+      console.log('----1');
 
       await userActivityServices.set_user_activity({ email: user.email, tag });
 
@@ -55,12 +56,15 @@ class ArticleController {
         if (!article.length) throw "Article not in db.";
         return socket.emit(aTS.CRAWL_STORY_SUCCESS, { article: article[0], tag });
       } catch (err) {
-        // console.log(err);
+        console.log('[Article not in db.]',err);
       }
 
+      console.log('----------article fetch starting.');
       var article = await crawlerServices.crawl_article({ url });
 
-      if (article.image[0]) { article.image = article.image[0]; };
+      console.log('----------article fetched.', article);
+
+      if (article.image && article.image[0]) { article.image = article.image[0]; };
 
       article.keywords = article.keywords
         .filter(item => {
@@ -81,6 +85,8 @@ class ArticleController {
         msg: err.toString()
       });
     }
+
+    console.log('[Save]: ', article);
 
     if (article.crawl_status === 'success') {  //save to db
       this.saveToDb(article);

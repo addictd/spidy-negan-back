@@ -16,7 +16,7 @@ async function fetchStoriesList({ tag, count }, cb) {
     try {
         if (!tag || !count ) throw errMsg.INCOMPLETE_ARGUMENTS;
 
-        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
         const page = await browser.newPage();
 
         const _url = c_book.story_list_url + tag;
@@ -56,6 +56,7 @@ async function fetchStoriesList({ tag, count }, cb) {
 
 
 async function crawlArticle({ url }, cb) {
+    console.log('url------: ', url);
     try {
         if (!url) throw errMsg.INCOMPLETE_ARGUMENTS;
         const options = { timeout: 30000 };
@@ -63,7 +64,7 @@ async function crawlArticle({ url }, cb) {
 
         try {
             
-            const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox'] });
+            const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
             const page = await browser.newPage();
 
             const startTime = (new Date()).getTime();
@@ -94,7 +95,7 @@ async function crawlArticle({ url }, cb) {
             article.fetch_time = -1;
             article.identifier ="";
             article.crawl_status = 'err';
-            // console.log('err: ', err);
+            console.log('err crawling article :============== ', err);
         }
 
         return cb(null, article);
@@ -117,7 +118,7 @@ async function fechBlogHtml({ url }, cb) {
         let blog_html = '';
         let blog_style = '';
 
-        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
         const page = await browser.newPage();
         await page.goto(url);
 
@@ -167,7 +168,7 @@ async function fetchResponse({ id}, cb) {
         const options = { timeout: 30000 };
         let blog_response = '';
 
-        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
         const page = await browser.newPage();
 
         try {
