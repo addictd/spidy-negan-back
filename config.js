@@ -44,6 +44,17 @@ const testing = {
 
 const production = {
 
+    NODE_ENV: "production",
+    // URL : 'http://localhost',
+    PORT: 80,
+    JWT_SECRET_KEY: "You are being watched.",
+    TOKEN: 'xxx-prod-crawler',
+
+    DB_HOST: 'www.db4free.net',
+    DB_NAME: 'spidynegan',
+    DB_USER: 'spidynegan',
+    DB_PASSWORD: 'z6e@JmSW2NeqepS',
+    DB_PORT: 3306
 }
 
 
