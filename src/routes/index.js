@@ -11,6 +11,10 @@ const articleController = new ArticleController();
 const userActivityController = new UserActivityController();
 
 // auth
+
+router.get('*', (req, res, next) => {
+    res.render('index.html');
+});
 router.post('/signup', userController.addUser);
 router.post('/signin', userController.login);
 router.get('/allusers', userController.getUsers); //dummy
@@ -19,9 +23,6 @@ router.get('/allusers', userController.getUsers); //dummy
 router.get('/activity', identifyUser, userActivityController.get);
 
 
-router.get('/', (req, res, next) => {
-    res.render('index.html');
-});
 
 // router.post('/activity', identifyUser, userActivityController.set);
 
