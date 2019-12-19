@@ -17,6 +17,12 @@ router.get('/allusers', userController.getUsers); //dummy
 
 
 router.get('/activity', identifyUser, userActivityController.get);
+
+
+router.get('/', (req, res, next) => {
+    res.render('index.html');
+});
+
 // router.post('/activity', identifyUser, userActivityController.set);
 
 

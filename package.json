@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "server": "NODE_PATH=src nodemon --watch src/ --exec babel-node src/bin/index.js --out-file  dist/index.js --dist/index.js --NODE_ENV=development",
-    "server:prod": "NODE_PATH=src nodemon --watch src/ --exec babel-node src/bin/index.js --out-file  dist/index.js --dist/index.js --NODE_ENV=production",
+    "server:prod": "NODE_PATH=src  babel-node src/bin/index.js --out-file  dist/index.js --dist/index.js --NODE_ENV=production",
     "start": "npm-run-all server",
     "start:prod": "npm-run-all server:prod",
     "test": "mocha --require babel-polyfill --require babel-register   --recursive --NODE_ENV=testing"
@@ -16,6 +16,7 @@
     "cookie-parser": "~1.0.1",
     "cors": "^2.8.5",
     "debug": "^4.1.1",
+    "ejs": "^3.0.1",
     "express": "^4.17.1",
     "html": "^1.0.0",
     "http": "^0.0.0",
