@@ -10,7 +10,7 @@ class ArticleController {
 
   async get_more_stories(socket, data) {
     const { tag, count, token } = data;
-    // console.log('data: ', data);
+    console.log('data: ', data);
 
     if (!tag || !count) return socket.emit(aTS.FETCH_MORE_LINKS_FAIL, {
       status: false,
