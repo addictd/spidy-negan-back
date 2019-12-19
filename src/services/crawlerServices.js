@@ -16,7 +16,7 @@ async function fetchStoriesList({ tag, count }, cb) {
     try {
         if (!tag || !count ) throw errMsg.INCOMPLETE_ARGUMENTS;
 
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
         const page = await browser.newPage();
 
         const _url = c_book.story_list_url + tag;
@@ -64,7 +64,7 @@ async function crawlArticle({ url }, cb) {
 
         try {
             
-            const browser = await puppeteer.launch({ headless: false });
+            const browser = await puppeteer.launch({ headless: false, args: ['--no-sandbox'] });
             const page = await browser.newPage();
 
             const startTime = (new Date()).getTime();
@@ -118,7 +118,7 @@ async function fechBlogHtml({ url }, cb) {
         let blog_html = '';
         let blog_style = '';
 
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
         const page = await browser.newPage();
         await page.goto(url);
 
@@ -168,7 +168,7 @@ async function fetchResponse({ id}, cb) {
         const options = { timeout: 30000 };
         let blog_response = '';
 
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
         const page = await browser.newPage();
 
         try {
