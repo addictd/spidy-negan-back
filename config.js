@@ -46,7 +46,7 @@ const production = {
 
     NODE_ENV: "production",
     // URL : 'http://localhost',
-    PORT: 80,
+    PORT: 5040,
     JWT_SECRET_KEY: "You are being watched.",
     TOKEN: 'xxx-prod-crawler',
 
