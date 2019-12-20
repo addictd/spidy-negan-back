@@ -24,7 +24,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
 
-var whitelist = ['http://localhost:5050', 'http://http://ec2-54-172-229-66.compute-1.amazonaws.com/', "http://127.0.0.1:5500"];
+var whitelist = ['http://localhost:5050', 
+    'http://http://ec2-54-172-229-66.compute-1.amazonaws.com/', 
+    "http://127.0.0.1:5500",
+    "http://ec2-54-164-2-124.compute-1.amazonaws.com"
+];
 var corsOptionsDelegate = function (req, callback) {
     var corsOptions;
     if (whitelist.indexOf(req.header('Origin')) !== -1) {
