@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 import { promisify } from 'util';
 import * as errMsg from "../utils/errorMsg";
 import * as c_book from '../utils/crawl_book';
+var shell = require('shelljs');
 
 const crawlerServices = {
     fetch_more_stories_list : fetchStoriesList,
@@ -47,7 +48,9 @@ async function fetchStoriesList({ tag, count }, cb) {
                 return item;
             });
     
-            await browser.close();
+            const close = await browser.close();
+
+            shell.exec('pkill chrome')
             return resolve({links : fetched_links, related_tags});
     
         } catch (err) {
@@ -91,7 +94,8 @@ async function crawlArticle({ url }, cb) {
                 const endTime = (new Date()).getTime();
                 
                 await browser.close();
-    
+                shell.exec('pkill chrome');
+
                 article.fetch_time = endTime - startTime;
                 article.crawl_status = 'success';
     
@@ -158,6 +162,7 @@ async function fechBlogHtml({ url }, cb) {
             
     
             await browser.close();
+            shell.exec('pkill chrome');
             
             return resolve({blog_html, blog_style} );
     
@@ -194,6 +199,7 @@ async function fetchResponse({ id}, cb) {
             } catch (err) {  };
     
             await browser.close();
+            shell.exec('pkill chrome');
             
             return resolve( blog_response);
     
