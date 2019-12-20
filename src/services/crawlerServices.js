@@ -53,7 +53,7 @@ async function fetchStoriesList({ tag, count }, cb) {
         } catch (err) {
             return reject(errMsg._ERR(err));
         }
-    }
+    });
     
 }
 
@@ -108,7 +108,7 @@ async function crawlArticle({ url }, cb) {
             return reject(errMsg._ERR(err));
         }
 
-    }
+    });
 
 }
 
@@ -164,7 +164,7 @@ async function fechBlogHtml({ url }, cb) {
         } catch (err) {
             return reject(errMsg._ERR(err));
         }
-    }
+    });
 
 
 }
@@ -200,7 +200,7 @@ async function fetchResponse({ id}, cb) {
         } catch (err) {
             return reject(errMsg._ERR(err));
         }
-    }
+    });
 
 }
 
