@@ -46,7 +46,7 @@ async function fetchStoriesList({ tag, count }, cb) {
             return item;
         });
 
-        await browser.close();
+        browser.close();
         return cb(null, {links : fetched_links, related_tags});
 
     } catch (err) {
@@ -86,7 +86,7 @@ async function crawlArticle({ url }, cb) {
             
             const endTime = (new Date()).getTime();
             
-            await browser.close();
+            browser.close();
 
             article.fetch_time = endTime - startTime;
             article.crawl_status = 'success';
@@ -149,7 +149,7 @@ async function fechBlogHtml({ url }, cb) {
 
         
 
-        await browser.close();
+        browser.close();
         
         return cb(null, {blog_html, blog_style} );
 
@@ -181,7 +181,7 @@ async function fetchResponse({ id}, cb) {
             
         } catch (err) {  };
 
-        await browser.close();
+        browser.close();
         
         return cb(null, blog_response);
 
