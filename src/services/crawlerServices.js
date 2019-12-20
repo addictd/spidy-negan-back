@@ -13,10 +13,11 @@ const crawlerServices = {
 
 
 async function fetchStoriesList({ tag, count }, cb) {
+    var browser = {};
     try {
         if (!tag || !count ) throw errMsg.INCOMPLETE_ARGUMENTS;
 
-        var browser = await puppeteer.launch({ args: ['--no-sandbox'], headless: true });
+        browser = await puppeteer.launch({ args: ['--no-sandbox'], headless: true });
         const page = await browser.newPage();
 
         const _url = c_book.story_list_url + tag;
@@ -52,15 +53,21 @@ async function fetchStoriesList({ tag, count }, cb) {
 
     } catch (err) {
         await browser.close();
-        cb(errMsg._ERR(err));
-    }finally{
-        await browser.close();
+        if(browser.close){
+            await browser.close();
+        }
+    } finally{
+        if(browser.close){
+            await browser.close();
+        }
     }
 }
 
 
 async function crawlArticle({ url }, cb) {
     console.log('url------: ', url);
+
+    var browser = {};
     try {
         if (!url) throw errMsg.INCOMPLETE_ARGUMENTS;
         const options = { timeout: 30000 };
@@ -68,7 +75,7 @@ async function crawlArticle({ url }, cb) {
 
         try {
             
-            var browser = await puppeteer.launch({ args: ['--no-sandbox'], headless: false });
+            browser = await puppeteer.launch({ args: ['--no-sandbox'], headless: false });
             const page = await browser.newPage();
 
             const startTime = (new Date()).getTime();
@@ -107,9 +114,13 @@ async function crawlArticle({ url }, cb) {
 
     } catch (err) {
         cb(errMsg._ERR(err));
-        await browser.close();
-    }finally{
-        await browser.close();
+        if(browser.close){
+            await browser.close();
+        }
+    } finally{
+        if(browser.close){
+            await browser.close();
+        }
     }
 }
 
@@ -119,6 +130,7 @@ async function crawlArticle({ url }, cb) {
 
 async function fechBlogHtml({ url }, cb) {
 
+    var browser = {};
     try {
         if (!url ) throw errMsg.INCOMPLETE_ARGUMENTS;
 
@@ -126,7 +138,7 @@ async function fechBlogHtml({ url }, cb) {
         let blog_html = '';
         let blog_style = '';
 
-        var browser = await puppeteer.launch({ args: ['--no-sandbox'], headless: true });
+        browser = await puppeteer.launch({ args: ['--no-sandbox'], headless: true });
         const page = await browser.newPage();
         await page.goto(url);
 
@@ -164,9 +176,13 @@ async function fechBlogHtml({ url }, cb) {
 
     } catch (err) {
         cb(errMsg._ERR(err));
-        await browser.close();
+        if(browser.close){
+            await browser.close();
+        }
     }finally{
-        await browser.close();
+        if(browser.close){
+            await browser.close();
+        }
     }
 }
 
@@ -174,13 +190,14 @@ async function fechBlogHtml({ url }, cb) {
 
 async function fetchResponse({ id}, cb) {
 
+    var browser = {};
     try {
         if (!id ) throw errMsg.INCOMPLETE_ARGUMENTS;
 
         const options = { timeout: 30000 };
         let blog_response = '';
 
-        var browser = await puppeteer.launch({ args: ['--no-sandbox'], headless: true });
+        browser = await puppeteer.launch({ args: ['--no-sandbox'], headless: true });
         const page = await browser.newPage();
 
         try {
@@ -200,9 +217,13 @@ async function fetchResponse({ id}, cb) {
 
     } catch (err) {
         cb(errMsg._ERR(err));
-        await browser.close();
+        if(browser.close){
+            await browser.close();
+        }
     } finally{
-        await browser.close();
+        if(browser.close){
+            await browser.close();
+        }
     }
 }
 
