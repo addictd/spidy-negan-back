@@ -4,10 +4,10 @@ import * as errMsg from "../utils/errorMsg";
 import * as c_book from '../utils/crawl_book';
 
 const crawlerServices = {
-    fetch_more_stories_list : promisify(fetchStoriesList),
-    crawl_article: promisify(crawlArticle),
-    fetch_response : promisify(fetchResponse),
-    fetch_blog_html : promisify(fechBlogHtml)
+    fetch_more_stories_list : fetchStoriesList,
+    crawl_article: crawlArticle,
+    fetch_response : fetchResponse,
+    fetch_blog_html : fechBlogHtml
 }
 
 
