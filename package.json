@@ -9,7 +9,7 @@
     "test": "mocha --require babel-polyfill --require babel-register   --recursive --NODE_ENV=testing"
   },
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "~1.0.0",
     "chai": "^4.2.0",
     "cookie-parser": "~1.0.1",
